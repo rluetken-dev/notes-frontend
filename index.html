@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini-Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="container">
+      <h1>Mini-Notes</h1>
+      <label for="search" class="visually-hidden">Search notes</label>
+      <input id="search" type="text" placeholder="Suchen… (Titel, Text, #tag)" />
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Neue Notiz</h2>
+        <form id="note-form" autocomplete="off">
+          <input id="title" type="text" placeholder="Titel" required />
+          <textarea id="content" rows="5" placeholder="Inhalt…" required></textarea>
+          <button type="submit">Speichern</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Notizen</h2>
+        <p class="hint">Tipp: „Pin“ hält wichtige Notizen oben. Die Suche filtert live.</p>
+        <ul id="notes" role="list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <!-- Edit-Modal -->
+    <div id="edit-modal" class="modal" hidden>
+      <div class="modal-backdrop"></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-title-label">
+        <h3 id="edit-title-label">Notiz bearbeiten</h3>
+        <form id="edit-form">
+          <input id="edit-title" type="text" placeholder="Titel" required />
+          <textarea id="edit-content" rows="5" placeholder="Inhalt…" required></textarea>
+          <div class="modal-actions">
+            <button type="submit">Speichern</button>
+            <button type="button" id="edit-cancel">Abbrechen</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Confirm-Modal -->
+    <div id="confirm-modal" class="modal" hidden>
+      <div class="modal-backdrop"></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        aria-describedby="confirm-text"
+      >
+        <h3 id="confirm-title">Notiz löschen?</h3>
+        <p id="confirm-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+        <div class="modal-actions">
+          <button type="button" id="confirm-cancel">Abbrechen</button>
+          <button type="button" id="confirm-ok" class="danger">Ja, löschen</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

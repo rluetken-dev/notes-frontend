@@ -1,0 +1,192 @@
+:root {
+  --bg: #f6f7fb;
+  --fg: #222;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.container {
+  width: min(960px, 92%);
+  margin: 1.5rem auto;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+}
+
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+main.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 800px) {
+  main.container {
+    grid-template-columns: 1fr;
+  }
+}
+
+#notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.note {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.note .actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.note .actions button {
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* ===== Modal ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.modal-dialog h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button[type='submit'] {
+  background: #2563eb;
+  color: #fff;
+}
+
+.modal-actions button#edit-cancel {
+  background: #e5e7eb;
+}
+
+/* Do not scroll page when modal is open */
+body.no-scroll {
+  overflow: hidden;
+}
+
+.modal-actions .danger {
+  background: #e53935;
+  color: #fff;
+}
+
+.modal-actions #confirm-cancel {
+  background: #eee;
+}
+
+.hint {
+  opacity: 0.75;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.note {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.note.pinned {
+  border-color: #ffd36e;
+  background: #fff8e6;
+  box-shadow: 0 0 0 2px rgba(255, 210, 110, 0.25);
+}
+
+.note.empty {
+  border: 1px dashed #d1d5db;
+  background: #f9fafb;
+  color: #6b7280;
+  text-align: center;
+}
