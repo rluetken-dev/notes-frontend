@@ -16,6 +16,7 @@
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
 </p>
 
+
 A tiny, fast notes app as a pure frontend demo. No backend, no build chain required — just open it via a local web server.
 
 > **Tech stack:** Vanilla JS (ES Modules), HTML5, CSS (Design Tokens, Light/Dark Mode), localStorage, ESLint (Flat Config), Prettier
