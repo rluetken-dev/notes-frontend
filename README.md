@@ -1,5 +1,24 @@
 # Mini‑Notes
 
+<!-- Badges: update workflow filename/branch if needed -->
+<p align="left">
+  <!-- CI status (GitHub Actions) -->
+  <a href="https://github.com/rluetken-dev/mini-notes/actions">
+    <img
+      alt="CI"
+      src="https://img.shields.io/github/actions/workflow/status/rluetken-dev/mini-notes/ci.yml?branch=main"
+    >
+  </a>
+  <!-- Node version -->
+  <img alt="Node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
+  <!-- License -->
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <!-- ESLint -->
+  <img alt="ESLint" src="https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white">
+  <!-- Prettier -->
+  <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
+</p>
+
 A tiny, fast notes app as a pure frontend demo. No backend, no build chain required — just open it via a local web server.
 
 > **Tech stack:** Vanilla JS (ES Modules), HTML5, CSS (Design Tokens, Light/Dark Mode), localStorage, ESLint (Flat Config), Prettier
