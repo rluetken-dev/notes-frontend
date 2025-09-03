@@ -52,6 +52,25 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 
 ---
 
+## Demo
+
+<p align="center">
+  <img src="assets/screenshot-light.png" alt="Mini-Notes — Light theme" width="900">
+</p>
+
+<details>
+  <summary>Show dark theme</summary>
+  <p align="center">
+    <img src="assets/screenshot-dark.png" alt="Mini-Notes — Dark theme" width="900">
+  </p>
+</details>
+
+<!-- Optional short GIF -->
+<!-- Replace demo.gif when you have one -->
+<p align="center">
+  <img src="assets/demo.gif" alt="Mini-Notes — quick demo" width="900">
+</p>
+
 ## Requirements
 
 * **Browser:** recent versions of Chrome/Edge, Firefox, or Safari.
