@@ -1,4 +1,4 @@
-# Mini‑Notes
+# Mini-Notes
 
 <!-- Badges: update workflow filename/branch if needed -->
 <p align="left">
@@ -24,31 +24,37 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 
 ## Table of Contents
 
-* [Features](#features)
-* [Requirements](#requirements)
-* [Quick Start](#quick-start)
-* [Project Structure](#project-structure)
-* [Theming](#theming)
-* [Keyboard Shortcuts](#keyboard-shortcuts)
-* [Linting & Formatting](#linting--formatting)
-* [Data & Privacy](#data--privacy)
-* [Roadmap](#roadmap)
-* [Deployment](#deployment)
-* [Troubleshooting](#troubleshooting)
-* [License](#license)
+- [Features](#features)
+- [Demo](#demo)
+- [Requirements](#requirements)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Theming](#theming)
+- [Searching with #tags](#searching-with-tags)
+- [Backup (Export/Import)](#backup-exportimport)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Linting & Formatting](#linting--formatting)
+- [Data & Privacy](#data--privacy)
+- [Roadmap](#roadmap)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
 
 ---
 
 ## Features
 
-* ✍️ **Create / edit / delete notes**
-* 📌 **Pin** important notes to keep them on top
-* 🔎 **Live search** (title & content)
-* 🌓 **Dark Mode** with **system detection** & **toggle** (persisted in `localStorage`)
-* 💾 **Persistence** via `localStorage`
-* ⌨️ **Shortcut:** `Ctrl/Cmd + Enter` saves a new note
-* ♿ **A11y:** `aria-live` for the list, visually hidden labels, clear focus ring
-* 📱 **Responsive:** two-column layout, stacks on mobile
+- ✍️ **Create / edit / delete notes**
+- 📌 **Pin** important notes to keep them on top
+- 🔎 **Live search** (title & content)
+- #️⃣ **#tags in search** (AND filter; tags are extracted on-the-fly from title/content)
+- ✨ **Search highlighting** (`<mark>` for text; highlighted tag chips)
+- ⬇️⬆️ **Export / Import** (JSON; merge or replace existing notes)
+- 🌓 **Dark Mode** with **system detection** & **toggle** (persisted in `localStorage`)
+- 💾 **Persistence** via `localStorage`
+- ⌨️ **Shortcut:** `Ctrl/Cmd + Enter` saves a new note
+- ♿ **A11y:** `aria-live` for the list, visually hidden labels, clear focus ring
+- 📱 **Responsive:** two-column layout, stacks on mobile
 
 ---
 
@@ -65,12 +71,20 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
   </picture>
 </p>
 
+<details>
+  <summary>Show dark theme explicitly</summary>
+  <p align="center">
+    <img src="assets/screenshot-dark.png?v=2" alt="Mini-Notes — dark theme" width="900">
+  </p>
+</details>
+
+---
 
 ## Requirements
 
-* **Browser:** recent versions of Chrome/Edge, Firefox, or Safari.
-* **Node.js (optional – dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to *use* the app, but helpful for `npm run lint`/`format` and CI.
-* **Local web server:** required because of ES Modules (see Quick Start for options).
+- **Browser:** recent versions of Chrome/Edge, Firefox, or Safari.
+- **Node.js (optional – dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to *use* the app, but helpful for `npm run lint`/`format` and CI.
+- **Local web server:** required because of ES Modules (see Quick Start for options).
 
 ---
 
@@ -111,7 +125,8 @@ mini-notes/
 │  ├─ theme.js            # Theme controller (toggle, system, persistence)
 │  ├─ time.js             # now(), timeAgo() (de-DE)
 │  ├─ dialogs.js          # confirmDialog() using the modal
-│  └─ utils.js            # generateId(), escapeHtml(), sort, match
+│  ├─ backup.js           # exportNotes()/parseImportedFile()/mergeNotes()
+│  └─ utils.js            # generateId(), escapeHtml(), sort, match, tags, highlight
 ├─ eslint.config.mjs       # ESLint Flat Config (ESM, browser)
 ├─ package.json            # npm scripts (lint/format), dev deps
 └─ README.md               # you are here
@@ -121,20 +136,65 @@ mini-notes/
 
 ## Theming
 
-* **Design tokens** in `:root` (light defaults) + dark variants via `@media (prefers-color-scheme: dark)`.
-* **Explicit override** via `html[data-theme="light|dark"]` (set by the toggle button).
-* **No hard-coded colors** in components — everything derives from tokens.
+- **Design tokens** in `:root` (light defaults) + dark variants via `@media (prefers-color-scheme: dark)`.
+- **Explicit override** via `html[data-theme="light|dark"]` (set by the toggle button).
+- **No hard-coded colors** in components — everything derives from tokens.
 
-**Token highlights:** `--bg`, `--text`, `--muted`, `--card`, `--border`, `--primary`, `--on-primary`, `--danger`, `--on-danger`, `--input-border`, `--accent`, `--accent-bg`, `--accent-ring`, `--empty-*`.
+**Token highlights:** `--bg`, `--text`, `--muted`, `--card`, `--border`, `--primary`, `--on-primary`, `--danger`, `--on-danger`, `--input-border`, `--accent`, `--accent-bg`, `--accent-ring`, `--empty-border`, `--empty-bg`, `--empty-text`.
+
+---
+
+## Searching with #tags
+
+- Write tags anywhere in **title or content** using `#like-this` (letters, digits, `_` and `-`).
+- Query supports **free text** and **tags** together.
+- **All tags must match** (AND). Free text matches if it appears in title **or** content.
+
+**Examples**
+
+- `#work` → notes tagged `#work`
+- `#work #inbox` → notes that have **both** tags
+- `meeting` → full‑text search
+- `meeting #work` → full‑text **and** tag filter
+
+---
+
+## Backup (Export/Import)
+
+- **Export (.json):** downloads a file like `mini-notes-YYYYMMDD-HHMMSS.json`.
+- **Import (.json):** choose a file; you can **Replace** all notes or **Merge** with existing ones.
+  - **Merge rule:** for identical `id`s, the item with the **newer `updatedAt`** wins.
+- The **Export** button is disabled when there are no notes yet.
+
+**JSON shape**
+
+```json
+{
+  "app": "mini-notes",
+  "version": 1,
+  "exportedAt": 1690000000000,
+  "notes": [
+    {
+      "id": "…",
+      "title": "…",
+      "content": "…",
+      "createdAt": 1690000000000,
+      "updatedAt": 1690000000000,
+      "pinned": false
+    }
+  ]
+}
+```
+
+**Tip:** `localStorage` is **origin-scoped** — `http://localhost:5173` and `http://127.0.0.1:5173` are different stores.
 
 ---
 
 ## Keyboard Shortcuts
 
-* **Save new note:** `Ctrl/Cmd + Enter`
-* **Theme toggle:** click `🌓`
-
-  * Right‑click on `🌓` → reset to **System**
+- **Save new note:** `Ctrl/Cmd + Enter`
+- **Theme toggle:** click `🌓`  
+  - Right‑click on `🌓` → reset to **System**
 
 ---
 
@@ -150,58 +210,72 @@ npm run format
 
 **Notes:**
 
-* ESLint uses the **Flat Config** (`eslint.config.mjs`). Remove legacy `.eslintrc.*` files.
-* Prettier handles formatting; ESLint focuses on code quality.
+- ESLint uses the **Flat Config** (`eslint.config.mjs`). Remove legacy `.eslintrc.*` files.
+- Prettier handles formatting; ESLint focuses on code quality.
 
 ---
 
 ## Data & Privacy
 
-* All data is stored **locally in the browser** via `localStorage`.
-* **No** data is sent to any server.
-* You can clear storage manually in your browser at any time.
+- All data is stored **locally in the browser** via `localStorage`.
+- **No** data is sent to any server.
+- You can clear storage manually in your browser at any time.
+- Backups are plain **JSON** files; review them before sharing.
+- Note: storage is **origin-scoped** (`http://localhost:5173` ≠ `http://127.0.0.1:5173`).
 
 ---
 
 ## Roadmap (ideas)
 
-* `#tags` in search (tokenization & AND/OR)
-* Highlight matches in content
-* **Export/Import** (JSON) for backup/sharing
-* Sorting (e.g., by `updatedAt`, `title`)
-* Markdown support (read‑only render)
-* PWA (offline, installable)
-* Unit tests (e.g., Vitest for utils)
+- Tag management (rename/delete, suggestions while typing)
+- Result snippets (show a short context around search hits)
+- Sorting options (e.g., by `updatedAt`, `title`)
+- Markdown preview (read‑only render)
+- PWA (offline, installable)
+- IndexedDB storage (scales better than localStorage)
+- Tests: unit (Vitest) & end-to-end (Playwright)
+- A11y polish: focus trap in modals, improved keyboard navigation
 
 ---
 
 ## Deployment
 
-* **GitHub Pages:** static hosting — publish the `main` branch or a `docs/` folder.
-* **Netlify/Vercel:** set up as a “Static Site”, leave build command empty.
+- **GitHub Pages:** static hosting — publish the `main` branch or a `docs/` folder.
+- **Netlify/Vercel:** set up as a “Static Site”, leave the build command empty, publish the repo root.
 
 ---
 
 ## Troubleshooting
 
 **ES Modules won’t load?**
-
-* Make sure you use `http://localhost:…` (not `file://`).
-* Confirm that `index.html` includes:
-
+- Use `http://localhost:…` (not `file://`).
+- Ensure your HTML has:
   ```html
   <script type="module" src="src/app.js"></script>
   ```
+- Check the server root: the browser must find `/src/app.js` relative to `index.html`.
 
 **ESLint complains about `import/export`?**
-
-* Ensure **`eslint.config.mjs`** exists in the project root with `sourceType: 'module'`.
-* Remove old `.eslintrc.*` files if present.
+- Confirm you use the Flat Config: **`eslint.config.mjs`** at the project root.
+- Remove legacy `.eslintrc.*` files.
+- If needed, set `languageOptions.sourceType = "module"` in the flat config.
 
 **Dark Mode doesn’t change?**
+- Make sure the `#theme-toggle` button exists in `index.html`.
+- Check for a hard-coded `data-theme` on `<html>` that could force a theme.
+- Open DevTools → Console for `localStorage` errors (e.g., private mode).
 
-* Check the `#theme-toggle` button exists in `index.html`.
-* Open DevTools → Console: any errors accessing `localStorage`?
+**Export button is disabled?**
+- That’s by design when there are **no notes** yet. Create a note first.
+
+**Import seems to do nothing?**
+- Verify the JSON format (see **Backup** section).
+- On conflicts (same `id`), the note with the **newer `updatedAt`** wins.
+- Reminder: `localStorage` is **origin-scoped** (`localhost` ≠ `127.0.0.1`).
+
+**Search feels off?**
+- Tag filters are **AND** combined: `#work #inbox` requires **both**.
+- Free-text matches title **or** content; highlighting is simple substring matching.
 
 ---
 
