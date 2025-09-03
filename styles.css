@@ -1,88 +1,224 @@
+/* =========================================================
+   Mini-Notes – Themeable CSS (Light/Dark via tokens)
+   – English comments for clarity
+   – No hard-coded colors in components
+   – Accessible utilities & focus states
+   ========================================================= */
+
 /* ===== Design tokens (light defaults) =====
-   Centralized color variables. Everything below should use these,
-   so we can flip themes without touching component styles. */
+   Centralized design variables. Components must only use these.
+   Dark mode is handled by @media and explicit html[data-theme] overrides. */
 :root {
+  /* Base surfaces & text */
   --bg: #ffffff; /* page background */
-  --text: #111111; /* primary (body) text */
-  --muted: #666666; /* secondary text / hints */
-  --card: #f6f6f6; /* surfaces like cards, modals */
-  --border: #e5e5e5; /* subtle borders / dividers */
+  --text: #111111; /* primary text */
+  --muted: #666666; /* secondary text */
+  --card: #f6f6f6; /* card/modal surface */
+  --border: #e5e5e5; /* subtle borders and dividers */
+
+  /* Actions & status */
+  --primary: #2563eb; /* primary buttons/links */
+  --on-primary: #ffffff; /* text/icon color on primary */
+  --danger: #e53935; /* destructive actions */
+  --on-danger: #ffffff;
+
+  /* Inputs / neutral UI */
+  --input-border: #cccccc;
+
+  /* Accent (pinned state, halos) */
+  --accent: #ffd36e;
+  --accent-bg: #fff8e6;
+  --accent-ring: rgba(255, 211, 110, 0.25);
+
+  /* Empty/placeholder */
+  --empty-border: #d1d5db;
+  --empty-bg: #f9fafb;
+  --empty-text: #6b7280;
+
+  /* Misc */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Universal box-sizing for predictable layout sizing */
+/* ===== Automatic dark mode (system preference) =====
+   Applies only when there is NO explicit html[data-theme] override. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115;
+    --text: #e6e6e6;
+    --muted: #a0a0a0;
+    --card: #171a21;
+    --border: #2a2f3a;
+
+    --input-border: #3a3f4b;
+
+    /* Dark-friendly adjustments */
+    --accent-bg: rgba(255, 211, 110, 0.12);
+    --accent-ring: rgba(255, 211, 110, 0.35);
+
+    --empty-border: #374151;
+    --empty-bg: #111827;
+    --empty-text: #9ca3af;
+  }
+}
+
+/* ===== Explicit theme overrides (JS toggle) =====
+   Setting data-theme on <html> forces the tokens regardless of system. */
+html[data-theme='light'] {
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #666666;
+  --card: #f6f6f6;
+  --border: #e5e5e5;
+
+  --input-border: #cccccc;
+
+  --accent-bg: #fff8e6;
+  --accent-ring: rgba(255, 211, 110, 0.25);
+
+  --empty-border: #d1d5db;
+  --empty-bg: #f9fafb;
+  --empty-text: #6b7280;
+}
+
+html[data-theme='dark'] {
+  --bg: #0f1115;
+  --text: #e6e6e6;
+  --muted: #a0a0a0;
+  --card: #171a21;
+  --border: #2a2f3a;
+
+  --input-border: #3a3f4b;
+
+  --accent-bg: rgba(255, 211, 110, 0.12);
+  --accent-ring: rgba(255, 211, 110, 0.35);
+
+  --empty-border: #374151;
+  --empty-bg: #111827;
+  --empty-text: #9ca3af;
+}
+
+/* ===== Base / reset ===== */
 * {
   box-sizing: border-box;
 }
 
-/* Base page styles: remove default margin, set font,
-   and hook up theme tokens for background & text */
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
 body {
   margin: 0;
   font-family: system-ui, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text); /* fixed: was --fg */
 }
 
-/* Constrain content width and center the app */
+/* Improve text selection contrast */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ===== A11y utility =====
+   Screen-reader-only text; keeps labels accessible without visual clutter. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Layout ===== */
 .container {
   width: min(960px, 92%);
   margin: 1.5rem auto;
 }
 
-/* Card pattern (light values here are later overridden by token-based
-   rules below; you can convert these to tokens now if you like) */
-.card {
-  background: #fff; /* consider: var(--card) */
-  border: 1px solid #e5e7eb; /* consider: 1px solid var(--border) */
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1rem;
-}
-
-/* Simple stacked form layout */
-form {
-  display: grid;
-  gap: 0.5rem;
-}
-
-/* Normalize form controls and buttons */
-input,
-textarea,
-button {
-  font: inherit;
-  padding: 0.6rem;
-  border: 1px solid #ccc; /* consider: var(--border) */
-  border-radius: 8px;
-}
-
-/* Primary action button */
-button {
-  background: #2563eb; /* primary brand/action color */
-  color: #fff;
-  cursor: pointer;
-}
-
-/* Slight visual feedback on hover */
-button:hover {
-  filter: brightness(0.95);
-}
-
-/* Two-column layout for main content, collapses on small screens */
 main.container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-/* Responsive: stack columns on narrow viewports */
 @media (max-width: 800px) {
   main.container {
     grid-template-columns: 1fr;
   }
 }
 
-/* Notes list reset + grid spacing */
+/* Optional: header alignment for title + search + toggle */
+header.container {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ===== Cards / surfaces ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1rem;
+}
+
+/* Muted helper text */
+.muted {
+  color: var(--muted);
+}
+
+/* ===== Forms & Buttons ===== */
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+  padding: 0.6rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+}
+
+/* Primary button */
+button {
+  background: var(--primary);
+  color: var(--on-primary);
+  cursor: pointer;
+  border: none; /* border already in the reset above; we remove it here */
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+/* Keyboard focus: visible, accessible ring */
+:where(input, textarea, button):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Theme toggle button: compact square */
+#theme-toggle {
+  width: 2.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  padding: 0;
+  text-align: center;
+}
+
+/* ===== Notes list ===== */
 #notes {
   list-style: none;
   margin: 0;
@@ -91,16 +227,17 @@ main.container {
   gap: 0.5rem;
 }
 
-/* Individual note appearance (light values; see token overrides below) */
+/* Note card */
 .note {
-  background: #fff; /* consider: var(--card) */
-  border: 1px solid #e5e7eb; /* consider: var(--border) */
-  border-radius: 8px;
-  padding: 0.75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 0.75rem;
   text-align: left;
 }
 
-/* Horizontal button row inside a note */
+/* Actions row inside a note */
 .note .actions {
   display: flex;
   gap: 0.5rem;
@@ -114,37 +251,50 @@ main.container {
   border-radius: 6px;
 }
 
-/* ===== Modal (edit / detail) ===== */
+/* Pinned note styling via accent tokens */
+.note.pinned {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+
+/* Empty state placeholder */
+.note.empty {
+  border: 1px dashed var(--empty-border);
+  background: var(--empty-bg);
+  color: var(--empty-text);
+  text-align: center;
+}
+
+/* ===== Modal (edit / confirm) ===== */
 .modal {
   position: fixed;
-  inset: 0; /* top/right/bottom/left: 0 */
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* above regular content */
+  z-index: 1000;
 }
 
-/* Hide modal with [hidden] attribute (keeps layout rules available) */
 .modal[hidden] {
   display: none;
 }
 
-/* Dimmed backdrop behind the dialog */
 .modal-backdrop {
   position: absolute;
   inset: 0;
+  /* Backdrop stays semi-transparent; works for both themes */
   background: rgba(0, 0, 0, 0.5);
 }
 
-/* Modal dialog surface */
 .modal-dialog {
   position: relative;
-  background: #fff; /* consider: var(--card) */
+  background: var(--card);
   border-radius: 12px;
   padding: 1rem;
   max-width: 400px;
   width: 100%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-md);
   z-index: 1; /* above backdrop */
 }
 
@@ -152,7 +302,6 @@ main.container {
   margin-top: 0;
 }
 
-/* Button row inside the modal footer */
 .modal-actions {
   display: flex;
   gap: 0.5rem;
@@ -160,7 +309,6 @@ main.container {
   margin-top: 1rem;
 }
 
-/* Normalize modal action buttons */
 .modal-actions button {
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -168,107 +316,27 @@ main.container {
   cursor: pointer;
 }
 
-/* Primary confirm action */
+/* Primary confirm */
 .modal-actions button[type='submit'] {
-  background: #2563eb;
-  color: #fff;
+  background: var(--primary);
+  color: var(--on-primary);
 }
 
-/* Secondary cancel action */
-.modal-actions button#edit-cancel {
-  background: #e5e7eb; /* consider: var(--border) as bg if desired */
-}
-
-/* Lock page scroll while modal is open (body gets .no-scroll) */
-body.no-scroll {
-  overflow: hidden;
-}
-
-/* Destructive/confirm buttons with stronger affordance */
-.modal-actions .danger {
-  background: #e53935;
-  color: #fff;
-}
-
+/* Subtle cancel (neutral look that works in both themes) */
+.modal-actions #edit-cancel,
 .modal-actions #confirm-cancel {
-  background: #eee;
-}
-
-/* Subtle helper/caption text */
-.hint {
-  opacity: 0.75;
-  font-size: 0.9rem;
-  margin: 0.25rem 0 0.75rem;
-}
-
-/* Note variations (pinned / empty states) */
-.note {
-  border: 1px solid #e6e6e6; /* consider: var(--border) */
-  border-radius: 12px;
-  padding: 0.9rem;
-  margin-bottom: 0.75rem;
-}
-
-/* Pinned notes: highlighted background/border */
-.note.pinned {
-  border-color: #ffd36e;
-  background: #fff8e6;
-  box-shadow: 0 0 0 2px rgba(255, 210, 110, 0.25);
-}
-
-/* Empty state placeholder styling */
-.note.empty {
-  border: 1px dashed #d1d5db;
-  background: #f9fafb;
-  color: #6b7280;
-  text-align: center;
-}
-
-/* ===== Token application layer =====
-   From here on, we explicitly bind components to tokens.
-   This ensures theme switches update the UI consistently. */
-html,
-body {
-  background: var(--bg);
+  background: var(--card);
+  border: 1px solid var(--border);
   color: var(--text);
 }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
+/* Destructive action */
+.modal-actions .danger {
+  background: var(--danger);
+  color: var(--on-danger);
 }
 
-.muted {
-  color: var(--muted);
-}
-
-/* ===== Automatic dark mode via system preference =====
-   When the OS is set to dark AND no explicit theme override is set,
-   flip the tokens to their dark equivalents. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1115;
-    --text: #e6e6e6;
-    --muted: #a0a0a0;
-    --card: #171a21;
-    --border: #2a2f3a;
-  }
-}
-
-/* ===== Explicit theme overrides (for JS toggle) =====
-   Setting data-theme on <html> will force a theme regardless of system. */
-html[data-theme='light'] {
-  --bg: #ffffff;
-  --text: #111111;
-  --muted: #666666;
-  --card: #f6f6f6;
-  --border: #e5e5e5;
-}
-
-html[data-theme='dark'] {
-  --bg: #0f1115;
-  --text: #e6e6e6;
-  --muted: #a0a0a0;
-  --card: #171a21;
-  --border: #2a2f3a;
+/* Prevent background scroll while modal is open */
+body.no-scroll {
+  overflow: hidden;
 }
