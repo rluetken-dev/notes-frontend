@@ -1,38 +1,88 @@
 <!doctype html>
+<!--
+  Mini-Notes – HTML shell
+  --------------------------------------------------
+  - German UI text (lang="de") with English code comments
+  - Structure:
+      <header>   → app title, search input, theme toggle
+      <main>     → new-note form (left), notes list (right)
+      Modals     → edit note, confirm delete
+  - CSS (styles.css) provides light/dark theming via tokens
+  - JS (src/app.js as ES module) wires up behavior
+-->
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
     <title>Mini-Notes</title>
+    <!-- Mobile-friendly viewport scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- App stylesheet (contains design tokens + layout + components) -->
     <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
+    <!--
+      Header
+      - Left: app title
+      - Middle: search input (visually hidden label for a11y)
+      - Right: theme toggle (light/dark; JS handles click + contextmenu)
+    -->
     <header class="container">
       <h1>Mini-Notes</h1>
+
+      <!-- a11y: hidden label so screen readers announce the control -->
       <label for="search" class="visually-hidden">Search notes</label>
+
+      <!-- Live filtering of notes (title/content/#tag) handled in app.js -->
       <input id="search" type="text" placeholder="Suchen… (Titel, Text, #tag)" />
+
+      <!-- Theme toggle:
+           - Left click: toggle light/dark (persisted in localStorage)
+           - Right click (contextmenu): reset to system preference
+           JS: initThemeController() in theme.js -->
       <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">🌓</button>
     </header>
 
+    <!--
+      Main content
+      - Two cards: "Neue Notiz" form and "Notizen" list
+      - Layout: responsive grid (see styles.css)
+    -->
     <main class="container">
+      <!-- New note form -->
       <section class="card">
         <h2>Neue Notiz</h2>
+        <!-- autocomplete=off to avoid browser autofill noise in a notes app -->
         <form id="note-form" autocomplete="off">
+          <!-- Minimal inputs; placeholders act as inline hints. Required fields. -->
           <input id="title" type="text" placeholder="Titel" required />
           <textarea id="content" rows="5" placeholder="Inhalt…" required></textarea>
           <button type="submit">Speichern</button>
         </form>
       </section>
 
+      <!-- Notes list / results -->
       <section class="card">
         <h2>Notizen</h2>
         <p class="hint">Tipp: „Pin“ hält wichtige Notizen oben. Die Suche filtert live.</p>
+
+        <!--
+          Notes container:
+          - role="list": semantic list for screen readers
+          - aria-live="polite": updates announced without being disruptive
+          Rendering logic lives in render() inside app.js
+        -->
         <ul id="notes" role="list" aria-live="polite"></ul>
       </section>
     </main>
 
-    <!-- Edit-Modal -->
+    <!--
+      Edit Modal
+      - Shown when editing an existing note
+      - Uses .modal/.modal-backdrop/.modal-dialog structure
+      - aria-modal + aria-labelledby for accessible dialog semantics
+      - Closing logic: Cancel button, backdrop click, or ESC (see app.js)
+    -->
     <div id="edit-modal" class="modal" hidden>
       <div class="modal-backdrop"></div>
       <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-title-label">
@@ -48,7 +98,15 @@
       </div>
     </div>
 
-    <!-- Confirm-Modal -->
+    <!--
+      Confirm Modal
+      - Generic yes/no confirmation (currently used for deleting a note)
+      - aria-labelledby/aria-describedby wire up title/body for screen readers
+      - Buttons:
+          #confirm-cancel → negative action
+          #confirm-ok.danger → destructive confirm
+      - Behavior implemented in dialogs.js → confirmDialog()
+    -->
     <div id="confirm-modal" class="modal" hidden>
       <div class="modal-backdrop"></div>
       <div
@@ -67,6 +125,11 @@
       </div>
     </div>
 
+    <!--
+      Application entrypoint
+      - ES Module imports (src/app.js) which coordinates all modules
+      - Make sure your server serves files with correct MIME types for modules
+    -->
     <script type="module" src="src/app.js"></script>
   </body>
 </html>

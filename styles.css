@@ -3,6 +3,12 @@
    – English comments for clarity
    – No hard-coded colors in components
    – Accessible utilities & focus states
+   ---------------------------------------------------------
+   Layering order (important for how values win):
+   1) :root (light defaults)
+   2) @media (prefers-color-scheme) → only applies when NO explicit override
+   3) html[data-theme="light"|"dark"] → explicit override from JS toggle
+   Components below only consume tokens; they never use fixed colors.
    ========================================================= */
 
 /* ===== Design tokens (light defaults) =====
@@ -23,25 +29,26 @@
   --on-danger: #ffffff;
 
   /* Inputs / neutral UI */
-  --input-border: #cccccc;
+  --input-border: #cccccc; /* input outlines; tweak per theme below */
 
   /* Accent (pinned state, halos) */
-  --accent: #ffd36e;
-  --accent-bg: #fff8e6;
-  --accent-ring: rgba(255, 211, 110, 0.25);
+  --accent: #ffd36e; /* used for borders/highlights */
+  --accent-bg: #fff8e6; /* subtle background for pinned notes */
+  --accent-ring: rgba(255, 211, 110, 0.25); /* focus/halo shadow */
 
   /* Empty/placeholder */
   --empty-border: #d1d5db;
   --empty-bg: #f9fafb;
   --empty-text: #6b7280;
 
-  /* Misc */
+  /* Misc shadows (keep alpha so they look good in dark too) */
   --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 /* ===== Automatic dark mode (system preference) =====
-   Applies only when there is NO explicit html[data-theme] override. */
+   Applies only when there is NO explicit html[data-theme] override.
+   Tip: this makes the app "just work" on first load respecting OS setting. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f1115;
@@ -52,7 +59,7 @@
 
     --input-border: #3a3f4b;
 
-    /* Dark-friendly adjustments */
+    /* Dark-friendly adjustments (so accents aren't too loud) */
     --accent-bg: rgba(255, 211, 110, 0.12);
     --accent-ring: rgba(255, 211, 110, 0.35);
 
@@ -63,7 +70,8 @@
 }
 
 /* ===== Explicit theme overrides (JS toggle) =====
-   Setting data-theme on <html> forces the tokens regardless of system. */
+   Setting data-theme on <html> forces the tokens regardless of system.
+   JS: apply/remove via theme.js to persist user preference. */
 html[data-theme='light'] {
   --bg: #ffffff;
   --text: #111111;
@@ -100,7 +108,7 @@ html[data-theme='dark'] {
 
 /* ===== Base / reset ===== */
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* predictable sizing: width/height include padding+border */
 }
 
 html,
@@ -111,10 +119,11 @@ body {
 
 body {
   margin: 0;
-  font-family: system-ui, Arial, sans-serif;
+  font-family: system-ui, Arial, sans-serif; /* widely available, crisp UI font */
 }
 
-/* Improve text selection contrast */
+/* Improve text selection contrast (keeps visible in both themes).
+   NOTE: Ensure chosen colors meet contrast requirements for accessibility. */
 ::selection {
   background: var(--accent);
   color: #000;
@@ -137,23 +146,24 @@ body {
 
 /* ===== Layout ===== */
 .container {
-  width: min(960px, 92%);
-  margin: 1.5rem auto;
+  width: min(960px, 92%); /* fluid up to 960px, then fixed max */
+  margin: 1.5rem auto; /* centered */
 }
 
 main.container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr; /* two columns: new note | notes list */
   gap: 1rem;
 }
 
 @media (max-width: 800px) {
   main.container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* stack on small screens */
   }
 }
 
-/* Optional: header alignment for title + search + toggle */
+/* Optional: header alignment for title + search + toggle
+   Columns: [title] [search input] [theme button] */
 header.container {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -171,7 +181,7 @@ header.container {
   margin-bottom: 1rem;
 }
 
-/* Muted helper text */
+/* Muted helper text (hints, captions) */
 .muted {
   color: var(--muted);
 }
@@ -185,31 +195,32 @@ form {
 input,
 textarea,
 button {
-  font: inherit;
+  font: inherit; /* keep UI font consistent */
   padding: 0.6rem;
   border: 1px solid var(--input-border);
   border-radius: 8px;
 }
 
-/* Primary button */
+/* Primary button (uses tokens so it adapts to theme) */
 button {
   background: var(--primary);
   color: var(--on-primary);
   cursor: pointer;
-  border: none; /* border already in the reset above; we remove it here */
+  border: none; /* border defined above; we remove it here for a clean look */
 }
 
 button:hover {
-  filter: brightness(0.95);
+  filter: brightness(0.95); /* subtle feedback without changing palette */
 }
 
-/* Keyboard focus: visible, accessible ring */
+/* Keyboard focus: visible, accessible ring
+   NOTE: :focus-visible avoids showing focus on mouse clicks. */
 :where(input, textarea, button):focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--accent-ring);
 }
 
-/* Theme toggle button: compact square */
+/* Theme toggle button: compact square (icon-centered) */
 #theme-toggle {
   width: 2.25rem;
   height: 2.25rem;
@@ -237,7 +248,7 @@ button:hover {
   text-align: left;
 }
 
-/* Actions row inside a note */
+/* Actions row inside a note (Pin/Edit/Delete) */
 .note .actions {
   display: flex;
   gap: 0.5rem;
@@ -245,7 +256,7 @@ button:hover {
 }
 
 .note .actions button {
-  flex: 1;
+  flex: 1; /* evenly sized buttons */
   padding: 0.4rem;
   font-size: 0.85rem;
   border-radius: 6px;
@@ -255,10 +266,10 @@ button:hover {
 .note.pinned {
   border-color: var(--accent);
   background: var(--accent-bg);
-  box-shadow: 0 0 0 2px var(--accent-ring);
+  box-shadow: 0 0 0 2px var(--accent-ring); /* soft halo */
 }
 
-/* Empty state placeholder */
+/* Empty state placeholder (no notes or no matches) */
 .note.empty {
   border: 1px dashed var(--empty-border);
   background: var(--empty-bg);
@@ -266,14 +277,19 @@ button:hover {
   text-align: center;
 }
 
-/* ===== Modal (edit / confirm) ===== */
+/* ===== Modal (edit / confirm) =====
+   Structure:
+   .modal           → fixed overlay container
+   .modal-backdrop  → dim background
+   .modal-dialog    → centered content box
+   Hidden state via [hidden] attribute toggled by JS. */
 .modal {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1000; /* above page content */
 }
 
 .modal[hidden] {
@@ -340,3 +356,11 @@ button:hover {
 body.no-scroll {
   overflow: hidden;
 }
+
+/* NOTE:
+   If you add animations for modals later, consider respecting
+   users who prefer reduced motion:
+   @media (prefers-reduced-motion: reduce) {
+     * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+   }
+*/
