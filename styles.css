@@ -229,6 +229,23 @@ button:hover {
   text-align: center;
 }
 
+/* Disabled buttons: clear visual + accessible */
+button[disabled],
+button[aria-disabled='true'] {
+  background: var(--card); /* neutral surface */
+  color: var(--muted); /* subdued text */
+  border: 1px solid var(--border); /* bring border back for outline */
+  opacity: 0.9; /* leicht abgedimmt, aber lesbar */
+  cursor: not-allowed;
+  filter: none; /* kein Hover-Dimming */
+  box-shadow: none; /* keine Hervorhebung */
+}
+
+button[disabled]:hover,
+button[aria-disabled='true']:hover {
+  filter: none;
+}
+
 /* ===== Notes list ===== */
 #notes {
   list-style: none;
@@ -294,6 +311,22 @@ button:hover {
   border-radius: 999px;
   background: transparent;
   color: var(--muted);
+}
+
+/* Visual highlight for search matches */
+mark {
+  background: var(--accent-bg); /* soft, theme-aware */
+  box-shadow: 0 0 0 2px var(--accent-ring);
+  border-radius: 3px;
+  padding: 0 0.1em;
+}
+
+/* Tag chips already exist; this variant emphasizes matched tags */
+.tag.match {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-ring);
 }
 
 /* ===== Modal (edit / confirm) =====

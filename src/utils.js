@@ -88,6 +88,36 @@ export function parseQuery(q) {
   return { text, tags };
 }
 
+// Escape a string so it can be safely used inside a RegExp.
+export function escapeRegExp(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Highlight free-text matches in a string using <mark>.
+ * - Uses parseQuery() to extract the text part (ignores #tags).
+ * - Case-insensitive; highlights ANY of the tokens (OR).
+ * - Always returns HTML-safe output (escapes before wrapping).
+ *
+ * @param {string} text - raw user text (title or content)
+ * @param {string} q    - raw query string
+ * @returns {string}    - HTML string with <mark> around matches
+ */
+export function highlightText(text, q) {
+  const { text: free } = parseQuery(q);
+  const source = String(text ?? '');
+  if (!free) return escapeHtml(source);
+
+  // Split into tokens; build a single regex (token1|token2|…)
+  const tokens = free.split(/\s+/).filter(Boolean).map(escapeRegExp);
+  if (tokens.length === 0) return escapeHtml(source);
+
+  const re = new RegExp(`(${tokens.join('|')})`, 'gi');
+
+  // Escape first, then wrap matches. $1 still matches after escaping.
+  return escapeHtml(source).replace(re, '<mark>$1</mark>');
+}
+
 /**
  * Case-insensitive match for notes with support for #tags.
  *

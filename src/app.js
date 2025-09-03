@@ -21,7 +21,15 @@ import { loadNotes, saveNotes } from './storage.js';
 import { now, timeAgo } from './time.js';
 import { confirmDialog } from './dialogs.js';
 import { exportNotes, parseImportedFile, mergeNotes } from './backup.js';
-import { generateId, escapeHtml, byPinnedThenUpdated, matchesQuery, extractTags } from './utils.js';
+import {
+  generateId,
+  escapeHtml,
+  byPinnedThenUpdated,
+  matchesQuery,
+  extractTags,
+  highlightText,
+  parseQuery,
+} from './utils.js';
 
 // ---- State ----
 // In-memory state of all notes; persisted via localStorage.
@@ -75,15 +83,19 @@ function refreshTimes() {
 function render() {
   // Read current search query; empty string means "match all".
   const q = searchEl?.value.trim() || '';
+  const { tags: queryTags } = parseQuery(q); // NEW
+  listEl.innerHTML = '';
 
   // Clear existing list items before re-hydrating the view.
   listEl.innerHTML = '';
 
-  // Work on a shallow copy to avoid mutating the original array during sort.
-  const filtered = notes
-    .slice()
-    .sort(byPinnedThenUpdated) // pinned first, then updatedAt desc
-    .filter((n) => matchesQuery(n, q));
+  // Enable/disable Export based on total note count (must run before early returns)
+  if (exportBtn) {
+    const hasNotes = notes.length > 0;
+    exportBtn.disabled = !hasNotes;
+    exportBtn.setAttribute('aria-disabled', String(!hasNotes));
+    exportBtn.title = hasNotes ? 'Export notes as JSON' : 'Nothing to export yet';
+  }
 
   // Empty-state #1: There are no notes at all yet.
   if (notes.length === 0) {
@@ -93,6 +105,11 @@ function render() {
     listEl.appendChild(li);
     return;
   }
+
+  const filtered = notes
+    .slice()
+    .sort(byPinnedThenUpdated)
+    .filter((n) => matchesQuery(n, q));
 
   // Empty-state #2: Notes exist, but none match the current search query.
   if (filtered.length === 0) {
@@ -114,26 +131,32 @@ function render() {
     const tags = extractTags(n.title, n.content);
 
     li.innerHTML = `
-      <h3>${n.pinned ? '📌 ' : ''}${escapeHtml(n.title)}</h3>
-      <p>${escapeHtml(n.content)}</p>
-      ${
-        tags.length
-          ? `
-        <ul class="tags" aria-label="Tags">
-          ${tags.map((t) => `<li class="tag">#${escapeHtml(t)}</li>`).join('')}
-        </ul>
-      `
-          : ''
-      }
-      <small class="ts" data-ts="${ts}" title="${new Date(ts).toLocaleString()}">
-        Zuletzt geändert: ${timeAgo(ts)}
-      </small>
-      <div class="actions">
-        <button data-action="toggle-pin" data-id="${n.id}">${n.pinned ? 'Unpin' : 'Pin'}</button>
-        <button data-action="edit" data-id="${n.id}">Edit</button>
-        <button data-action="delete" data-id="${n.id}">Delete</button>
-      </div>
-    `;
+  <h3>${n.pinned ? '📌 ' : ''}${highlightText(n.title, q)}</h3>
+  <p>${highlightText(n.content, q)}</p>
+  ${
+    tags.length
+      ? `
+    <ul class="tags" aria-label="Tags">
+      ${tags
+        .map((t) => {
+          const isMatch = queryTags.includes(t);
+          // Add a CSS class when the tag is part of the current query
+          return `<li class="tag${isMatch ? ' match' : ''}">#${escapeHtml(t)}</li>`;
+        })
+        .join('')}
+    </ul>
+  `
+      : ''
+  }
+  <small class="ts" data-ts="${ts}" title="${new Date(ts).toLocaleString()}">
+    Zuletzt geändert: ${timeAgo(ts)}
+  </small>
+  <div class="actions">
+    <button data-action="toggle-pin" data-id="${n.id}">${n.pinned ? 'Unpin' : 'Pin'}</button>
+    <button data-action="edit" data-id="${n.id}">Edit</button>
+    <button data-action="delete" data-id="${n.id}">Delete</button>
+  </div>
+`;
 
     listEl.appendChild(li);
   });
