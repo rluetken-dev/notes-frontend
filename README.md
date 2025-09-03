@@ -2,11 +2,10 @@
 
 <!-- Badges: update workflow filename/branch if needed -->
 <p align="left">
-  <!-- CI (main) via Shields: zeigt nur push-Runs auf main -->
-  <a href="https://github.com/rluetken-dev/mini-notes/actions/workflows/ci.yml">
-    <img alt="CI (main)"
-        src="https://img.shields.io/github/actions/workflow/status/rluetken-dev/mini-notes/ci.yml?branch=main&event=push">
-  </a>
+<!-- Native GitHub badge: zeigt den letzten Run auf main -->
+<a href="https://github.com/rluetken-dev/mini-notes/actions/workflows/ci.yml">
+  <img alt="CI" src="https://github.com/rluetken-dev/mini-notes/actions/workflows/ci.yml/badge.svg?branch=main">
+</a>
   <!-- Node version -->
   <img alt="Node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
   <!-- License -->
