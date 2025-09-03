@@ -16,7 +16,6 @@
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
 </p>
 
-
 A tiny, fast notes app as a pure frontend demo. No backend, no build chain required — just open it via a local web server.
 
 > **Tech stack:** Vanilla JS (ES Modules), HTML5, CSS (Design Tokens, Light/Dark Mode), localStorage, ESLint (Flat Config), Prettier
@@ -84,7 +83,7 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 ## Requirements
 
 - **Browser:** recent versions of Chrome/Edge, Firefox, or Safari.
-- **Node.js (optional – dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to *use* the app, but helpful for `npm run lint`/`format` and CI.
+- **Node.js (optional – dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to _use_ the app, but helpful for `npm run lint`/`format` and CI.
 - **Local web server:** required because of ES Modules (see Quick Start for options).
 
 ---
@@ -194,7 +193,7 @@ mini-notes/
 ## Keyboard Shortcuts
 
 - **Save new note:** `Ctrl/Cmd + Enter`
-- **Theme toggle:** click `🌓`  
+- **Theme toggle:** click `🌓`
   - Right‑click on `🌓` → reset to **System**
 
 ---
@@ -249,6 +248,7 @@ npm run format
 ## Troubleshooting
 
 **ES Modules won’t load?**
+
 - Use `http://localhost:…` (not `file://`).
 - Ensure your HTML has:
   ```html
@@ -257,24 +257,29 @@ npm run format
 - Check the server root: the browser must find `/src/app.js` relative to `index.html`.
 
 **ESLint complains about `import/export`?**
+
 - Confirm you use the Flat Config: **`eslint.config.mjs`** at the project root.
 - Remove legacy `.eslintrc.*` files.
 - If needed, set `languageOptions.sourceType = "module"` in the flat config.
 
 **Dark Mode doesn’t change?**
+
 - Make sure the `#theme-toggle` button exists in `index.html`.
 - Check for a hard-coded `data-theme` on `<html>` that could force a theme.
 - Open DevTools → Console for `localStorage` errors (e.g., private mode).
 
 **Export button is disabled?**
+
 - That’s by design when there are **no notes** yet. Create a note first.
 
 **Import seems to do nothing?**
+
 - Verify the JSON format (see **Backup** section).
 - On conflicts (same `id`), the note with the **newer `updatedAt`** wins.
 - Reminder: `localStorage` is **origin-scoped** (`localhost` ≠ `127.0.0.1`).
 
 **Search feels off?**
+
 - Tag filters are **AND** combined: `#work #inbox` requires **both**.
 - Free-text matches title **or** content; highlighting is simple substring matching.
 
