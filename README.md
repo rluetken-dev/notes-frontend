@@ -54,11 +54,13 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 
 ## Demo
 
+## Demo
+
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/screenshot-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/screenshot-light.png">
-    <img src="assets/screenshot-light.png" alt="Mini-Notes — screenshot" width="900">
+    <source media="(prefers-color-scheme: dark)"  srcset="assets/screenshot-dark.png?v=2">
+    <source media="(prefers-color-scheme: light)" srcset="assets/screenshot-light.png?v=2">
+    <img src="assets/screenshot-light.png?v=2" alt="Mini-Notes — screenshot" width="900">
   </picture>
 </p>
 
