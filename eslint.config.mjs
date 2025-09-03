@@ -23,7 +23,7 @@ export default [
 
     // ---- Rules (keep it minimal; Prettier can come on top) ----
     rules: {
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
 ];

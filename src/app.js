@@ -339,7 +339,7 @@ importInput?.addEventListener('change', async () => {
   const file = importInput.files?.[0];
   if (!file) return;
 
-  const { notes: incoming, meta, error } = await parseImportedFile(file);
+  const { notes: incoming, error } = await parseImportedFile(file);
   importInput.value = ''; // reset the file input for subsequent imports
 
   if (error) {

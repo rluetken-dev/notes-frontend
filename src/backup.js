@@ -94,7 +94,7 @@ export async function parseImportedFile(file) {
 
     const meta = Array.isArray(data) ? { version: null } : { version: data?.version ?? null };
     return { notes: cleaned, meta, error: null };
-  } catch (e) {
+  } catch {
     return { notes: [], meta: null, error: 'Invalid JSON file.' };
   }
 }
