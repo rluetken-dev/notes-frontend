@@ -1,31 +1,29 @@
-import js from '@eslint/js';
-import globals from 'globals';
+// eslint.config.mjs
+// Flat config for a browser-based ESM app
 
 export default [
-  // Ignore build dirs
-  { ignores: ['node_modules/**', 'dist/**', 'build/**'] },
-
-  // Base rules
-  js.configs.recommended,
-
-  // Project config
   {
     files: ['**/*.js'],
+    ignores: ['node_modules/**', 'dist/**', 'build/**'],
+
+    // ---- Parser / language options ----
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'script',
-      // <- Browser-Umgebung: liefert setTimeout, window, document, etc.
+      ecmaVersion: 'latest', // allow modern syntax
+      sourceType: 'module', // <-- treat all .js as ES modules
       globals: {
-        ...globals.browser,
-        // falls du später Node-Skripte hast, ergänze:
-        // ...globals.node,
+        // Expose common browser globals as read-only
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        localStorage: 'readonly',
+        setTimeout: 'readonly',
+        crypto: 'readonly',
       },
     },
+
+    // ---- Rules (keep it minimal; Prettier can come on top) ----
     rules: {
-      'no-undef': 'error',
-      'no-unused-vars': 'warn',
-      eqeqeq: 'warn',
-      'no-console': 'off',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
 ];
