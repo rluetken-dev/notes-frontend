@@ -277,6 +277,25 @@ button:hover {
   text-align: center;
 }
 
+/* Tag chips below the note content */
+.tags {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+}
+
 /* ===== Modal (edit / confirm) =====
    Structure:
    .modal           → fixed overlay container

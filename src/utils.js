@@ -1,11 +1,10 @@
 // utils.js
-// Small generic helpers (ID + sanitization + sorting + search)
-// ------------------------------------------------------------
-// This module contains framework-agnostic utilities used across the app:
-// - generateId(): best-effort unique IDs (prefers crypto.randomUUID)
-// - escapeHtml(): minimal HTML entity escaping for safe innerHTML usage
-// - byPinnedThenUpdated(): stable comparator for note ordering
-// - matchesQuery(): simple case-insensitive text match in title/content
+// Small generic helpers (ID + sanitization + sorting + search + #tags)
+// --------------------------------------------------------------------
+// New in this version:
+// - extractTags(...parts): find unique #tags in given strings
+// - parseQuery(q): split a search query into { text, tags[] }
+// - matchesQuery(note, q): supports tag filters (#foo) + plain text
 
 /**
  * Generate a reasonably unique ID string.
@@ -13,12 +12,6 @@
  * Strategy:
  * - Prefer the browser's cryptographically strong UUID if available.
  * - Fallback: random base36 + timestamp fragment (good enough for local apps).
- *
- * Notes:
- * - For production-grade IDs across distributed systems, stick to UUID.
- * - Collision chance in the fallback is extremely low for this use-case.
- *
- * @returns {string} A unique-ish identifier
  */
 export const generateId = () =>
   typeof crypto !== 'undefined' && crypto.randomUUID
@@ -27,14 +20,7 @@ export const generateId = () =>
 
 /**
  * Escape a string for safe insertion via element.innerHTML.
- *
- * Important:
- * - If you are *not* injecting HTML (i.e., just text), prefer:
- *     node.textContent = value;
- *   which is inherently safe and usually faster.
- *
- * @param {string} s - Untrusted user input (title/content)
- * @returns {string} Escaped string with minimal HTML entities
+ * If you can, prefer textContent over innerHTML to avoid injecting HTML at all.
  */
 export function escapeHtml(s) {
   return String(s).replace(
@@ -52,36 +38,83 @@ export function escapeHtml(s) {
 
 /**
  * Comparator for notes: pinned first, then by updatedAt (newest first).
- *
- * Usage:
- *   notes.slice().sort(byPinnedThenUpdated)
- *
- * @param {{ pinned?: boolean, updatedAt?: number }} a
- * @param {{ pinned?: boolean, updatedAt?: number }} b
- * @returns {number} Negative if a < b, positive if a > b, 0 if equal
  */
 export function byPinnedThenUpdated(a, b) {
-  if (a.pinned !== b.pinned) return a.pinned ? -1 : 1; // pinned items float to top
-  return (b.updatedAt ?? 0) - (a.updatedAt ?? 0); // newer first
+  if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+  return (b.updatedAt ?? 0) - (a.updatedAt ?? 0);
 }
 
 /**
- * Case-insensitive substring match against note title/content.
+ * Extract unique #tags from one or more text parts.
  *
- * Design:
- * - Simple "includes" search over lowercased title and content.
- * - Empty query matches everything.
+ * Rules:
+ * - Tags start with '#' and contain letters, digits, '_' or '-'
+ * - Minimum length 2 (e.g., #go is ok; #a is ignored)
+ * - Matching is ASCII-only here for simplicity; extend the regex for Unicode if needed.
  *
- * Extensions (future ideas):
- * - Add diacritic-insensitive search via String.prototype.normalize().
- * - Tokenize query (AND/OR), support #tags, or highlight matches.
+ * Examples:
+ *   "Hello #work #Work" → ["work"]
+ *   "Mix: (#dev), text#notatag" → ["dev"]
+ */
+export function extractTags(...parts) {
+  const text = parts.filter(Boolean).join(' ');
+  const set = new Set();
+  const re = /(^|[\s.,;:!?([{\-])#([a-z0-9_-]{2,24})\b/gi;
+  let m;
+  while ((m = re.exec(text))) {
+    set.add(m[2].toLowerCase());
+  }
+  return [...set];
+}
+
+/**
+ * Parse a user query into plain text and tag filters.
+ * Input: "urgent #work #inbox"
+ * Output: { text: "urgent", tags: ["work","inbox"] }
+ */
+export function parseQuery(q) {
+  q = (q || '').trim();
+  if (!q) return { text: '', tags: [] };
+
+  const tags = [];
+  // Collect tags and strip them from the free-text part
+  const text = q
+    .replace(/(^|[\s])#([a-z0-9_-]{2,24})\b/gi, (_, s, tag) => {
+      tags.push(tag.toLowerCase());
+      return s; // keep spacing
+    })
+    .trim();
+
+  return { text, tags };
+}
+
+/**
+ * Case-insensitive match for notes with support for #tags.
  *
- * @param {{ title?: string, content?: string }} n - Note to test
- * @param {string} q - Raw query string (user input)
- * @returns {boolean} True if the note matches, false otherwise
+ * Rules:
+ * - If query contains #tags, the note must contain **all** those tags
+ *   (tags are extracted from note title + content).
+ * - If query also has free text, we do a simple OR-substring match across
+ *   title or content (case-insensitive).
+ * - If query is empty, everything matches.
  */
 export function matchesQuery(n, q) {
-  if (!q) return true;
-  q = q.toLowerCase();
-  return (n.title || '').toLowerCase().includes(q) || (n.content || '').toLowerCase().includes(q);
+  const { text, tags } = parseQuery(q);
+
+  // Tag filter: require ALL tags to be present in the note
+  if (tags.length) {
+    const noteTags = extractTags(n.title, n.content);
+    for (const t of tags) if (!noteTags.includes(t)) return false;
+  }
+
+  // Free-text part: simple case-insensitive substring (title OR content)
+  if (text) {
+    const needle = text.toLowerCase();
+    return (
+      (n.title || '').toLowerCase().includes(needle) ||
+      (n.content || '').toLowerCase().includes(needle)
+    );
+  }
+
+  return true;
 }

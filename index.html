@@ -64,6 +64,15 @@
       <!-- Notes list / results -->
       <section class="card">
         <h2>Notizen</h2>
+        <div
+          class="actions"
+          style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1rem"
+        >
+          <button id="export-btn" type="button">Export (.json)</button>
+          <button id="import-btn" type="button">Import (.json)</button>
+          <!-- hidden file input for imports -->
+          <input id="import-input" type="file" accept="application/json" hidden />
+        </div>
         <p class="hint">Tipp: „Pin“ hält wichtige Notizen oben. Die Suche filtert live.</p>
 
         <!--

@@ -20,7 +20,8 @@ import { initThemeController } from './theme.js';
 import { loadNotes, saveNotes } from './storage.js';
 import { now, timeAgo } from './time.js';
 import { confirmDialog } from './dialogs.js';
-import { generateId, escapeHtml, byPinnedThenUpdated, matchesQuery } from './utils.js';
+import { exportNotes, parseImportedFile, mergeNotes } from './backup.js';
+import { generateId, escapeHtml, byPinnedThenUpdated, matchesQuery, extractTags } from './utils.js';
 
 // ---- State ----
 // In-memory state of all notes; persisted via localStorage.
@@ -43,6 +44,10 @@ const editContent = document.getElementById('edit-content');
 const editCancel = document.getElementById('edit-cancel');
 // Use optional chaining in case the element is missing during early load.
 const editBackdrop = editModal?.querySelector('.modal-backdrop');
+
+const exportBtn = document.getElementById('export-btn');
+const importBtn = document.getElementById('import-btn');
+const importInput = document.getElementById('import-input');
 
 // ---- Theme init ----
 // Initialize theme controller as soon as DOM is ready (toggle, system sync).
@@ -103,13 +108,23 @@ function render() {
     const li = document.createElement('li');
     li.className = 'note' + (n.pinned ? ' pinned' : '');
 
-    // Prefer updatedAt, fall back to createdAt; use now() as a last resort.
     const ts = n.updatedAt || n.createdAt || now();
 
-    // Use escapeHtml() to avoid XSS when injecting user-provided strings.
+    // Compute tags from title + content for display
+    const tags = extractTags(n.title, n.content);
+
     li.innerHTML = `
       <h3>${n.pinned ? '📌 ' : ''}${escapeHtml(n.title)}</h3>
       <p>${escapeHtml(n.content)}</p>
+      ${
+        tags.length
+          ? `
+        <ul class="tags" aria-label="Tags">
+          ${tags.map((t) => `<li class="tag">#${escapeHtml(t)}</li>`).join('')}
+        </ul>
+      `
+          : ''
+      }
       <small class="ts" data-ts="${ts}" title="${new Date(ts).toLocaleString()}">
         Zuletzt geändert: ${timeAgo(ts)}
       </small>
@@ -284,6 +299,42 @@ document.addEventListener('visibilitychange', () => {
  * but it's not necessary at this scale.
  */
 searchEl.addEventListener('input', render);
+
+// Export current notes as JSON
+exportBtn?.addEventListener('click', () => {
+  // NOTE: Uses a minimal schema check; invalid items are dropped.
+  exportNotes(notes);
+});
+
+// Open file picker for import
+importBtn?.addEventListener('click', () => {
+  importInput?.click();
+});
+
+// Handle selected .json, ask user: replace all or merge, then persist & re-render
+importInput?.addEventListener('change', async () => {
+  const file = importInput.files?.[0];
+  if (!file) return;
+
+  const { notes: incoming, meta, error } = await parseImportedFile(file);
+  importInput.value = ''; // reset the file input for subsequent imports
+
+  if (error) {
+    alert(error); // simple feedback; could be a nicer toast/modal later
+    return;
+  }
+
+  // Ask the user whether to REPLACE everything or MERGE
+  const replace = await confirmDialog({
+    title: 'Import notes',
+    text: `Found ${incoming.length} note(s) in the file.\n\nOK = Replace all existing notes\nCancel = Merge with existing notes`,
+  });
+
+  notes = replace ? incoming : mergeNotes(notes, incoming);
+
+  saveNotes(notes);
+  render();
+});
 
 // ---- Init ----
 // Initial render of the list and periodic refresh of time labels.
