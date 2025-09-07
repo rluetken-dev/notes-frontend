@@ -1,5 +1,5 @@
 {
-  "name": "mini-notes",
+  "name": "notes-frontend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -9,8 +9,16 @@
   },
   "devDependencies": {
     "eslint": "^9.0.0",
-    "prettier": "^3.0.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0"
-  }
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rluetken-dev/notes-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rluetken-dev/notes-frontend/issues"
+  },
+  "homepage": "https://github.com/rluetken-dev/notes-frontend#readme"
 }
