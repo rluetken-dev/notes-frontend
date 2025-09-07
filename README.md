@@ -12,7 +12,7 @@
   <a href="https://github.com/rluetken-dev/notes-frontend/releases">
     <img
       alt="Release"
-      src="https://img.shields.io/github/v/release/rluetken-dev/notes-frontend?sort=semver&display_name=tag&cacheSeconds=300"
+      src="https://img.shields.io/github/v/release/rluetken-dev/notes-frontend?sort=semver&display_name=tag&cacheSeconds=120"
     >
   </a>
 </p>
