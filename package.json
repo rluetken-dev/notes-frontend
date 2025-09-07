@@ -20,5 +20,6 @@
   "bugs": {
     "url": "https://github.com/rluetken-dev/notes-frontend/issues"
   },
-  "homepage": "https://github.com/rluetken-dev/notes-frontend#readme"
+  "homepage": "https://github.com/rluetken-dev/notes-frontend#readme",
+  "description": "Tiny, fast notes app — pure frontend (Vanilla JS, ES Modules, localStorage). #tags, search, dark mode, export/import. No build, no backend."
 }
