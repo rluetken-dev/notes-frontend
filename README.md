@@ -9,6 +9,9 @@
   <img alt="ESLint" src="https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white">
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
   <img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg">
+  <a href="https://github.com/rluetken-dev/notes-frontend/releases">
+    <img alt="Release" src="https://img.shields.io/github/v/release/rluetken-dev/notes-frontend?sort=semver">
+  </a>
 </p>
 
 A tiny, fast notes app as a **pure frontend** demo. No backend or bundler required — just open it via a local web server.
