@@ -3,8 +3,8 @@
 <!-- Badges: update workflow filename/branch if needed -->
 <p align="left">
 <!-- Native GitHub badge: zeigt den letzten Run auf main -->
-<a href="https://github.com/rluetken-dev/mini-notes/actions/workflows/ci.yml">
-  <img alt="CI" src="https://github.com/rluetken-dev/mini-notes/actions/workflows/ci.yml/badge.svg?branch=main">
+<a href="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml">
+  <img alt="CI" src="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml/badge.svg?branch=main">
 </a>
   <!-- Node version -->
   <img alt="Node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
@@ -95,7 +95,7 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 ```bash
 # 1) Clone the repo
 # git clone <your-repo-url>
-cd mini-notes
+cd notes-frontend
 
 # 2) (optional) Install dev dependencies for lint/format
 npm install
@@ -116,7 +116,7 @@ npm install
 ## Project Structure
 
 ```
-mini-notes/
+notes-frontend/
 ├─ index.html              # App shell & markup (DE UI, English code comments)
 ├─ styles.css              # Design tokens, layout, components, dark mode
 ├─ src/
@@ -161,7 +161,7 @@ mini-notes/
 
 ## Backup (Export/Import)
 
-- **Export (.json):** downloads a file like `mini-notes-YYYYMMDD-HHMMSS.json`.
+- **Export (.json):** downloads a file like `notes-frontend-YYYYMMDD-HHMMSS.json`.
 - **Import (.json):** choose a file; you can **Replace** all notes or **Merge** with existing ones.
   - **Merge rule:** for identical `id`s, the item with the **newer `updatedAt`** wins.
 - The **Export** button is disabled when there are no notes yet.
@@ -170,7 +170,7 @@ mini-notes/
 
 ```json
 {
-  "app": "mini-notes",
+  "app": "notes-frontend",
   "version": 1,
   "exportedAt": 1690000000000,
   "notes": [
@@ -288,3 +288,8 @@ npm run format
 ## License
 
 MIT (feel free to use, learn, and extend)
+
+
+Related:
+- Backend: https://github.com/rluetken-dev/notes-backend
+- Frontend: https://github.com/rluetken-dev/notes-frontend
