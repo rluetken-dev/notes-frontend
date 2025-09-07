@@ -3,6 +3,7 @@
 This project follows the **Conventional Commits** specification to keep a clean, readable Git history.
 
 Format:
+
 ```
 <type>(optional scope): <short summary>
 
@@ -28,36 +29,43 @@ Format:
 ## Examples
 
 ### Features
+
 ```
 feat(api): add CORS support for frontend integration
 ```
 
 ### Bug Fixes
+
 ```
 fix(api): correct null reference in UpdateNoteRequest handler
 ```
 
 ### Documentation
+
 ```
 docs(api): add XML comments for CRUD endpoints and improve README
 ```
 
 ### Style
+
 ```
 style: format code with dotnet formatter
 ```
 
 ### Refactor
+
 ```
 refactor(api): simplify pagination logic in GetAll endpoint
 ```
 
 ### Tests
+
 ```
 test(api): add integration tests for NotesController
 ```
 
 ### Chore
+
 ```
 chore(ci): update GitHub Actions workflow to use .NET 8.0.2
 ```
