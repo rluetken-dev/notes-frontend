@@ -8,6 +8,7 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
   <img alt="ESLint" src="https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white">
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
+  <img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg">
 </p>
 
 A tiny, fast notes app as a **pure frontend** demo. No backend or bundler required — just open it via a local web server.
@@ -31,6 +32,7 @@ Pairs with **[notes-backend](https://github.com/rluetken-dev/notes-backend)**. T
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Linting & Formatting](#linting--formatting)
 - [Scripts](#scripts)
+- [Commits & Changelog](#commits--changelog)
 - [Data & Privacy](#data--privacy)
 - [Roadmap](#roadmap)
 - [Deployment](#deployment)
@@ -45,7 +47,7 @@ Pairs with **[notes-backend](https://github.com/rluetken-dev/notes-backend)**. T
 - ✍️ **Create / edit / delete notes**
 - 📌 **Pin** important notes to keep them on top
 - 🔎 **Live search** (title & content)
-- #️⃣ **#tags in search** (AND filter; tags are extracted on‑the‑fly from title/content)
+- #️⃣ **#tags in search** (AND filter; tags are extracted on-the-fly from title/content)
 - ✨ **Search highlighting** (`<mark>` for text; highlighted tag chips)
 - ⬇️⬆️ **Export / Import** (JSON; merge or replace existing notes)
 - 🌓 **Dark Mode** with **system detection** & **toggle** (persisted in `localStorage`)
@@ -152,8 +154,8 @@ notes-frontend/
 
 - `#work` → notes tagged `#work`
 - `#work #inbox` → notes that have **both** tags
-- `meeting` → full‑text search
-- `meeting #work` → full‑text **and** tag filter
+- `meeting` → full-text search
+- `meeting #work` → full-text **and** tag filter
 
 ---
 
@@ -192,7 +194,7 @@ notes-frontend/
 
 - **Save new note:** `Ctrl/Cmd + Enter`
 - **Theme toggle:** click `🌓`
-  - Right‑click on `🌓` → reset to **System**
+  - Right-click on `🌓` → reset to **System**
 
 ---
 
@@ -221,6 +223,25 @@ npm run format
 
 ---
 
+## Commits & Changelog
+
+This repo follows **Conventional Commits** to keep history and changelogs clean.  
+See **[commits.md](./commits.md)** for the rules, allowed types, scopes, and examples.
+
+**Examples**
+
+- `feat(ui): add search highlight for tags`
+- `fix(storage): handle empty import file gracefully`
+- `docs: update README with screenshots`
+- `chore(prettier): format markdown`
+
+**Releases**
+
+- Tag releases as `vX.Y.Z` (SemVer).
+- Keep release notes concise and link the compare view.
+
+---
+
 ## Data & Privacy
 
 - All data is stored **locally in the browser** via `localStorage`.
@@ -236,7 +257,7 @@ npm run format
 - Tag management (rename/delete, suggestions while typing)
 - Result snippets (show a short context around search hits)
 - Sorting options (e.g., by `updatedAt`, `title`)
-- Markdown preview (read‑only render)
+- Markdown preview (read-only render)
 - PWA (offline, installable)
 - IndexedDB storage (scales better than localStorage)
 - Tests: unit (Vitest) & end-to-end (Playwright)
