@@ -16,3 +16,6 @@ pnpm-debug.log*
 Thumbs.db
 # env
 .env
+
+# Windows ADS
+*.Zone.Identifier
