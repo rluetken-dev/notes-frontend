@@ -127,9 +127,19 @@ notes-frontend/
 │  ├─ dialogs.js          # confirmDialog() using the modal
 │  ├─ backup.js           # exportNotes()/parseImportedFile()/mergeNotes()
 │  └─ utils.js            # generateId(), escapeHtml(), sort, match, tags, highlight
+├─ assets/
+│  ├─ screenshot-light.png
+│  └─ screenshot-dark.png
 ├─ eslint.config.mjs       # ESLint Flat Config (ESM, browser)
+├─ .prettierrc.json        # Prettier config
+├─ .prettierignore
 ├─ package.json            # npm scripts (lint/format), dev deps
+├─ commits.md              # Conventional Commits Leitfaden
+├─ .github/
+│  └─ workflows/
+│     └─ ci.yml            # minimal CI (Node 20 + Prettier check)
 └─ README.md               # you are here
+
 ```
 
 ---
