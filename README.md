@@ -1,22 +1,18 @@
-# Mini-Notes
+# notes-frontend
 
-<!-- Badges: update workflow filename/branch if needed -->
 <p align="left">
-<!-- Native GitHub badge: zeigt den letzten Run auf main -->
-<a href="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml">
-  <img alt="CI" src="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml/badge.svg?branch=main">
-</a>
-  <!-- Node version -->
+  <a href="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml">
+    <img alt="CI" src="https://github.com/rluetken-dev/notes-frontend/actions/workflows/ci.yml/badge.svg?branch=main">
+  </a>
   <img alt="Node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
-  <!-- License -->
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
-  <!-- ESLint -->
   <img alt="ESLint" src="https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white">
-  <!-- Prettier -->
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
 </p>
 
-A tiny, fast notes app as a pure frontend demo. No backend, no build chain required — just open it via a local web server.
+A tiny, fast notes app as a **pure frontend** demo. No backend or bundler required — just open it via a local web server.
+
+Pairs with **[notes-backend](https://github.com/rluetken-dev/notes-backend)**. This frontend is fully standalone (localStorage), the backend is optional.
 
 > **Tech stack:** Vanilla JS (ES Modules), HTML5, CSS (Design Tokens, Light/Dark Mode), localStorage, ESLint (Flat Config), Prettier
 
@@ -34,11 +30,13 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 - [Backup (Export/Import)](#backup-exportimport)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Linting & Formatting](#linting--formatting)
+- [Scripts](#scripts)
 - [Data & Privacy](#data--privacy)
 - [Roadmap](#roadmap)
 - [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
+- [Related](#related)
 
 ---
 
@@ -47,7 +45,7 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 - ✍️ **Create / edit / delete notes**
 - 📌 **Pin** important notes to keep them on top
 - 🔎 **Live search** (title & content)
-- #️⃣ **#tags in search** (AND filter; tags are extracted on-the-fly from title/content)
+- #️⃣ **#tags in search** (AND filter; tags are extracted on‑the‑fly from title/content)
 - ✨ **Search highlighting** (`<mark>` for text; highlighted tag chips)
 - ⬇️⬆️ **Export / Import** (JSON; merge or replace existing notes)
 - 🌓 **Dark Mode** with **system detection** & **toggle** (persisted in `localStorage`)
@@ -67,14 +65,14 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
     <!-- Shown when GitHub is in light mode -->
     <source media="(prefers-color-scheme: light)" srcset="assets/screenshot-light.png?v=2">
     <!-- Fallback for older clients -->
-    <img src="assets/screenshot-light.png?v=2" alt="Mini-Notes — screenshot" width="900">
+    <img src="assets/screenshot-light.png?v=2" alt="notes-frontend — screenshot" width="900">
   </picture>
 </p>
 
 <details>
   <summary>Show dark theme explicitly</summary>
   <p align="center">
-    <img src="assets/screenshot-dark.png?v=2" alt="Mini-Notes — dark theme" width="900">
+    <img src="assets/screenshot-dark.png?v=2" alt="notes-frontend — dark theme" width="900">
   </p>
 </details>
 
@@ -83,7 +81,7 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 ## Requirements
 
 - **Browser:** recent versions of Chrome/Edge, Firefox, or Safari.
-- **Node.js (optional – dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to _use_ the app, but helpful for `npm run lint`/`format` and CI.
+- **Node.js (optional — dev tools only):** Node **18+** (recommended **20+**) and npm. Not needed to _use_ the app, but helpful for `npm run lint`/`format` and CI.
 - **Local web server:** required because of ES Modules (see Quick Start for options).
 
 ---
@@ -94,7 +92,7 @@ A tiny, fast notes app as a pure frontend demo. No backend, no build chain requi
 
 ```bash
 # 1) Clone the repo
-# git clone <your-repo-url>
+git clone https://github.com/rluetken-dev/notes-frontend.git
 cd notes-frontend
 
 # 2) (optional) Install dev dependencies for lint/format
@@ -215,6 +213,14 @@ npm run format
 
 ---
 
+## Scripts
+
+- `npm run format` – format code with Prettier
+- `npm run format:check` – verify formatting
+- `npm run lint` – ESLint (Flat Config)
+
+---
+
 ## Data & Privacy
 
 - All data is stored **locally in the browser** via `localStorage`.
@@ -225,7 +231,7 @@ npm run format
 
 ---
 
-## Roadmap (ideas)
+## Roadmap
 
 - Tag management (rename/delete, suggestions while typing)
 - Result snippets (show a short context around search hits)
@@ -287,14 +293,11 @@ npm run format
 
 ## License
 
-MIT (feel free to use, learn, and extend)
+MIT — feel free to use, learn, and extend.
 
-Related:
+---
 
-- Backend: https://github.com/rluetken-dev/notes-backend
-- Frontend: https://github.com/rluetken-dev/notes-frontend
-
-Related:
+## Related
 
 - Backend: https://github.com/rluetken-dev/notes-backend
 - Frontend: https://github.com/rluetken-dev/notes-frontend
