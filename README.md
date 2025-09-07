@@ -293,3 +293,8 @@ Related:
 
 - Backend: https://github.com/rluetken-dev/notes-backend
 - Frontend: https://github.com/rluetken-dev/notes-frontend
+
+Related:
+
+- Backend: https://github.com/rluetken-dev/notes-backend
+- Frontend: https://github.com/rluetken-dev/notes-frontend
