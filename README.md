@@ -9,8 +9,9 @@
   <img alt="ESLint" src="https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white">
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
   <img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg">
-  <a href="https://github.com/rluetken-dev/notes-frontend/releases">
-    <img alt="Release" src="https://img.shields.io/badge/release-v1.0.3-blue">
+  <a href="https://github.com/rluetken-dev/notes-backend/releases">
+    <img alt="Release"
+        src="https://img.shields.io/github/v/release/rluetken-dev/notes-backend?sort=semver&display_name=tag">
   </a>
 </p>
 
