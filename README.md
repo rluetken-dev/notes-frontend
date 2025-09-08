@@ -138,7 +138,7 @@ notes-frontend/
 ├─ .prettierrc.json        # Prettier config
 ├─ .prettierignore
 ├─ package.json            # npm scripts (lint/format), dev deps
-├─ commits.md              # Conventional Commits Leitfaden
+├─ COMMITS.md              # Conventional Commits Leitfaden
 ├─ .github/
 │  └─ workflows/
 │     └─ ci.yml            # minimal CI (Node 20 + Prettier check)
