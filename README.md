@@ -240,7 +240,7 @@ npm run format
 ## Commits & Changelog
 
 This repo follows **Conventional Commits** to keep history and changelogs clean.  
-See **[commits.md](./commits.md)** for the rules, allowed types, scopes, and examples.
+See **[COMMITS.md](./COMMITS.md)** for the rules, allowed types, scopes, and examples.
 
 **Examples**
 
