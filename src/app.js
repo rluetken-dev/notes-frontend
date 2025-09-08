@@ -364,3 +364,29 @@ importInput?.addEventListener('change', async () => {
 render();
 setInterval(refreshTimes, 60_000); // refresh every 60 seconds
 // NOTE: You can clear this interval on page unload if desired.
+
+// ===== Minimal API test =====
+// This function tries to GET notes from the backend API
+// and logs the result into the browser console.
+// We only READ for now – no changes to the UI yet.
+async function testFetchNotes() {
+  try {
+    // Call backend API (make sure the port matches your backend run output!)
+    const res = await fetch('http://localhost:5257/api/notes');
+
+    // Check if response is OK (HTTP 200)
+    if (!res.ok) {
+      console.error('API error:', res.status, await res.text());
+      return;
+    }
+
+    // Parse JSON response
+    const data = await res.json();
+    console.log('API /api/notes →', data);
+  } catch (err) {
+    console.error('Network error:', err);
+  }
+}
+
+// Run test once the page is loaded
+document.addEventListener('DOMContentLoaded', testFetchNotes);
