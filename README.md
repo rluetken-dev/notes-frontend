@@ -10,7 +10,7 @@
   <img alt="Prettier" src="https://img.shields.io/badge/format-Prettier-F7B93E?logo=prettier&logoColor=black">
   <img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg">
   <a href="https://github.com/rluetken-dev/notes-frontend/releases">
-    <img alt="Release" src="https://img.shields.io/badge/release-v1.0.2-blue">
+    <img alt="Release" src="https://img.shields.io/badge/release-v1.0.3-blue">
   </a>
 </p>
 
